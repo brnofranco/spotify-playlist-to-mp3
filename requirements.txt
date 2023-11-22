@@ -1,0 +1,7 @@
+requests==2.31.0
+python-dotenv==1.0.0
+black==22.6.0
+pylint==2.17.4
+youtube-search-python==1.6.6
+pytube==15.0.0
+yt-dlp==2023.10.13
