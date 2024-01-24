@@ -50,7 +50,8 @@ class SpotifyRequest:
         print("[MP3SpotifyPlaylist] Getting song names from playlist")
         tracks = []
 
-        playlist_id = config.spotify_playlist_id
+        playlist_url = config.spotify_playlist_url
+        playlist_id = playlist_url.split("playlist/")[1]
         path = f"/v1/playlists/{playlist_id}/tracks"
 
         limit = 100
@@ -62,6 +63,10 @@ class SpotifyRequest:
 
             if response is not str:
                 items = response.get("items")
+
+                if len(items) == 0:
+                    break
+
                 for item in items:
                     tracks.append(item)
                 if len(items) == limit:

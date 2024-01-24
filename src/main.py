@@ -12,9 +12,11 @@ def start():
     songs_list = SpotifyMapper().map_track_names_from_playlist(playlist_data)
     youtube = YoutubeModel()
 
+    count = 1
     for song in songs_list:
         url = youtube.search_video(song)
-        youtube.download_audio(url)
+        youtube.download_audio(url, song, count)
+        count += 1
 
 
 if __name__ == "__main__":

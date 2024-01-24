@@ -4,4 +4,4 @@ black==22.6.0
 pylint==2.17.4
 youtube-search-python==1.6.6
 pytube==15.0.0
-yt-dlp==2023.10.13
+moviepy==1.0.3

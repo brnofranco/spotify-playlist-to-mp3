@@ -1,6 +1,9 @@
+from uu import Error
 from youtubesearchpython import VideosSearch
 from youtube.mapper import YoutubeMapper
-import yt_dlp
+from pytube import YouTube
+from moviepy.editor import VideoFileClip
+import os
 
 
 class YoutubeModel:
@@ -10,27 +13,21 @@ class YoutubeModel:
         print(f"[MP3SpotifyPlaylist] Found YT Link for {name}")
         return link
 
-    def download_audio(self, youtube_url: str) -> None:
-        output = "/songs"
-
-        video_info = yt_dlp.YoutubeDL().extract_info(url=youtube_url, download=False)
+    def download_audio(self, youtube_url: str, song_name: str, index: int) -> None:
+        current_path = os.path.abspath(os.getcwd())
+        output = current_path + "/songs"
 
         try:
-            for singleVideoInfo in video_info["entries"]:
-                self._make_download(singleVideoInfo, output)
-        except KeyError:
-            self._make_download(video_info, output)
+            yt = YouTube(youtube_url)
+            video_stream = yt.streams.get_highest_resolution()
+            video_path = video_stream.download(output)
 
-    def _make_download(self, videoInfo, path):
-        try:
-            filename = f"{path}/{videoInfo['title']}.mp3"
-            options = {
-                "format": "bestaudio/best",
-                "keepvideo": False,
-                "outtmpl": filename,
-            }
+            audio_path = output + "/" + str(index) + ". " + song_name + ".mp3"
 
-            with yt_dlp.YoutubeDL(options) as ydl:
-                ydl.download([videoInfo["webpage_url"]])
+            video_clip = VideoFileClip(video_path)
+            video_clip.audio.write_audiofile(audio_path, codec="mp3")
+            video_clip.close()
+
+            os.remove(video_path)
         except:
-            print("error occured with one video")
+            print("não foi possivel baixar")
