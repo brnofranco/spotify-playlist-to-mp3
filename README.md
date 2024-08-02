@@ -18,6 +18,12 @@ Download deps:
 
 `pip3 install -r requirements.txt`
 
-Create `.env` file with envs from `config.py`
+Create `.env` file with envs from `.env.example`
 
-Run using `python src/main.py`
+Run using `python main.py`
+
+### Troubleshooting:
+
+    "get_throttling_function_name: could not find match for multiple"
+
+    Follow the issue with a community solve: https://github.com/pytube/pytube/issues/1707
