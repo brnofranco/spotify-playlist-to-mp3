@@ -9,6 +9,7 @@ class Config:
         self.download_path_songs: str = (
             envs.get("CUSTOM_DOWNLOAD_PATH_SONGS", "") or f"{os.path.abspath( os.getcwd() )}/songs"
         )
+        self.skip_artists: [str] = envs.get("SKIP_ARTISTS", "").split(",")
 
 
 config = Config(os.environ)

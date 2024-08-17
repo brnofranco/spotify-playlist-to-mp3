@@ -19,7 +19,7 @@ def start():
             youtube.download_audio(url, song, count)
             count += 1
 
-        print("[SpotifyPlaylistToMP3] Starting finished successfully!")
+        print("[SpotifyPlaylistToMP3] Application finished successfully!")
     except Exception as error:
         print(f"[SpotifyPlaylistToMP3] Application failed: {error}")
 

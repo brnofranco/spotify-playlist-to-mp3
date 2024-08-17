@@ -1,4 +1,5 @@
 import re
+from config import config
 
 
 class SpotifyMapper:
@@ -10,6 +11,11 @@ class SpotifyMapper:
             artist = song["track"]["artists"][0]["name"]
 
             song = self._sanitize_song_name(f"{artist} - {song_name}")
+
+            if artist in config.skip_artists:
+                print(f'[SpotifyPlaylistToMP3] Skipping "{song}"')
+                continue
+
             song_names.append(song)
 
         return song_names
