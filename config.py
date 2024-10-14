@@ -10,6 +10,7 @@ class Config:
             envs.get("CUSTOM_DOWNLOAD_PATH_SONGS", "") or f"{os.path.abspath( os.getcwd() )}/songs"
         )
         self.skip_artists: [str] = envs.get("SKIP_ARTISTS", "").split(",")
+        self.reverse: bool = envs.get("PLAYLIST_REVERSE", "false") == "true"
 
 
 config = Config(os.environ)

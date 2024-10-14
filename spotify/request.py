@@ -1,4 +1,5 @@
 import base64
+import re
 from typing import Any
 import requests
 from config import config
@@ -48,7 +49,7 @@ class SpotifyRequest:
         tracks = []
 
         playlist_url = config.spotify_playlist_url
-        playlist_id = playlist_url.split("playlist/")[1]
+        playlist_id = self._get_playlist_id(playlist_url)
         path = f"/v1/playlists/{playlist_id}/tracks"
 
         limit = 100
@@ -74,3 +75,8 @@ class SpotifyRequest:
 
         print("[SpotifyPlaylistToMP3] Got all song names")
         return tracks
+
+    def _get_playlist_id(self, url) -> str:
+        pattern = r"open\.spotify\.com/playlist/([a-zA-Z0-9]+)"
+        match = re.search(pattern, url)
+        return match.group(1) if match else ""
