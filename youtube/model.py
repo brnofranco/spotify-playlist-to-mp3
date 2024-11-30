@@ -2,7 +2,7 @@ import os
 from youtubesearchpython import VideosSearch
 from config import config
 from youtube.mapper import YoutubeMapper
-from pytube import YouTube
+from pytubefix import YouTube
 from moviepy.editor import VideoFileClip
 
 
@@ -23,25 +23,53 @@ class YoutubeModel:
         return link
 
     def download_audio(self, youtube_url: str, song_name: str, index: int) -> bool:
+        CLIENTS = {
+            1: "ANDROID",
+            2: "WEB",
+            3: "WEB_EMBED",
+            4: "WEB_MUSIC",
+            5: "WEB_CREATOR",
+            6: "WEB_SAFARI",
+            7: "ANDROID_MUSIC",
+            8: "ANDROID_CREATOR",
+            9: "ANDROID_VR",
+            10: "ANDROID_PRODUCER",
+            11: "ANDROID_TESTSUITE",
+            12: "IOS",
+            13: "IOS_MUSIC",
+            14: "IOS_CREATOR",
+            15: "MWEB",
+            16: "TV_EMBED",
+            17: "MEDIA_CONNECT",
+        }
+
         try:
-            output = config.download_path_songs
-            audio_path = output + "/" + f"{index:03}" + " " + song_name + ".mp3"
+            for _, client in CLIENTS.items():
+                try:
+                    output = config.download_path_songs
 
-            if os.path.isfile(audio_path):
-                print(f'[SpotifyPlaylistToMP3] "{song_name}" already downloaded')
-                return False
+                    audio_file = f"/{index:03} {song_name}.mp3"
 
-            # Thats the only way file song worked in my car radio
-            youtube = YouTube(youtube_url)
-            video_stream = youtube.streams.get_highest_resolution()
-            video_path = video_stream.download(output)
-            video_clip = VideoFileClip(video_path)
-            video_clip.audio.write_audiofile(audio_path, codec="mp3")
-            video_clip.close()
+                    if os.path.isfile(output + audio_file):
+                        print(f'[SpotifyPlaylistToMP3] "{song_name}" already downloaded')
+                        return False
 
-            os.remove(video_path)
-            return True
+                    # Thats the only way file song worked in my car radio
+                    print(f'[SpotifyPlaylistToMP3] Trying to reach with "{client}" client')
+                    youtube = YouTube(youtube_url, client)
+                    video_stream = youtube.streams.get_highest_resolution()
+                    video_path = video_stream.download(output)
+                    video_clip = VideoFileClip(video_path)
+                    video_clip.audio.write_audiofile(output + audio_file, codec="mp3")
+                    video_clip.close()
+
+                    os.remove(video_path)
+                    return True
+                except Exception as error:
+                    print(
+                        f'[SpotifyPlaylistToMP3] "{song_name}" failed to download with "{client}": {error}'
+                    )
+
         except Exception as error:
-            print(f'[SpotifyPlaylistToMP3] "{song_name}" failed to download: {error}')
             print(f'[SpotifyPlaylistToMP3] Skipping "{song_name}"')
             return False

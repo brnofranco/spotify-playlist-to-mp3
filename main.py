@@ -20,20 +20,24 @@ def start():
 
         youtube = YoutubeModel()
 
-        if config.reverse:
-            songs_list.reverse()
-
+        failed_songs = []
         song_number = 1
         for song in songs_list:
             url = youtube.search_video(song)
             if not url:
+                failed_songs.append(song)
                 continue
 
             success = youtube.download_audio(url, song, song_number)
             if not success:
+                failed_songs.append(song)
                 continue
 
             song_number += 1
+
+        with open("failed.txt", "w") as f:
+            for song in failed_songs:
+                f.write(f"{song} \n")
 
         print("[SpotifyPlaylistToMP3] Application finished successfully!")
     except Exception as error:

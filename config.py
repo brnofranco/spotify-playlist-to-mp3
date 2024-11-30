@@ -7,10 +7,9 @@ class Config:
         self.spotify_client_secret: str = envs.get("SPOTIFY_CLIENT_SECRET", "")
         self.spotify_playlist_url: str = envs.get("SPOTIFY_PLAYLIST_URL", "")
         self.download_path_songs: str = (
-            envs.get("CUSTOM_DOWNLOAD_PATH_SONGS", "") or f"{os.path.abspath( os.getcwd() )}/songs"
+            envs.get("CUSTOM_DOWNLOAD_PATH_SONGS", "") or f"{os.path.abspath(os.getcwd())}/songs"
         )
         self.skip_artists: [str] = envs.get("SKIP_ARTISTS", "").split(",")
-        self.reverse: bool = envs.get("PLAYLIST_REVERSE", "false") == "true"
 
 
 config = Config(os.environ)

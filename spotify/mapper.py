@@ -18,6 +18,8 @@ class SpotifyMapper:
 
             song_names.append(song)
 
+        print("[SpotifyPlaylistToMP3] Mapped all tracks")
+
         return song_names
 
     def _sanitize_song_name(self, song):
