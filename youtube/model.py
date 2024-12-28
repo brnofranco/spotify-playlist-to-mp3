@@ -22,7 +22,7 @@ class YoutubeModel:
 
         return link
 
-    def download_audio(self, youtube_url: str, song_name: str, index: int) -> bool:
+    def download_audio(self, youtube_url: str, artist_song_name: str, artist: str) -> bool:
         CLIENTS = {
             1: "ANDROID",
             2: "WEB",
@@ -46,12 +46,12 @@ class YoutubeModel:
         try:
             for _, client in CLIENTS.items():
                 try:
-                    output = config.download_path_songs
+                    output = f"{config.download_path_songs}/{artist}"
 
-                    audio_file = f"/{index:03} {song_name}.mp3"
+                    audio_file = f"/{artist_song_name}.mp3"
 
                     if os.path.isfile(output + audio_file):
-                        print(f'[SpotifyPlaylistToMP3] "{song_name}" already downloaded')
+                        print(f'[SpotifyPlaylistToMP3] "{artist_song_name}" already downloaded')
                         return False
 
                     # Thats the only way file song worked in my car radio
@@ -67,9 +67,9 @@ class YoutubeModel:
                     return True
                 except Exception as error:
                     print(
-                        f'[SpotifyPlaylistToMP3] "{song_name}" failed to download with "{client}": {error}'
+                        f'[SpotifyPlaylistToMP3] "{artist_song_name}" failed to download with "{client}": {error}'
                     )
 
         except Exception as error:
-            print(f'[SpotifyPlaylistToMP3] Skipping "{song_name}"')
+            print(f'[SpotifyPlaylistToMP3] Skipping "{artist_song_name}"')
             return False

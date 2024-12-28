@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 load_dotenv()
 from spotify import SpotifyMapper, SpotifyRequest
 from youtube import YoutubeModel
-from config import config
 
 
 def start():
@@ -14,26 +13,26 @@ def start():
         if not playlist_data:
             raise ValueError("Playlist not found!")
 
-        songs_list = SpotifyMapper().map_track_names_from_playlist(playlist_data)
+        songs_list = SpotifyMapper().map_track_names_by_artist(playlist_data)
         if not songs_list:
             raise ValueError("Playlist is empty!")
 
         youtube = YoutubeModel()
 
         failed_songs = []
-        song_number = 1
-        for song in songs_list:
-            url = youtube.search_video(song)
-            if not url:
-                failed_songs.append(song)
-                continue
+        for artist, songs in songs_list.items():
+            for song in songs:
+                artist_song_name = f"{artist} - {song}"
 
-            success = youtube.download_audio(url, song, song_number)
-            if not success:
-                failed_songs.append(song)
-                continue
+                url = youtube.search_video(artist_song_name)
+                if not url:
+                    failed_songs.append(artist_song_name)
+                    continue
 
-            song_number += 1
+                success = youtube.download_audio(url, artist_song_name, artist)
+                if not success:
+                    failed_songs.append(artist_song_name)
+                    continue
 
         with open("failed.txt", "w") as f:
             for song in failed_songs:
