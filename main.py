@@ -26,12 +26,14 @@ def start():
 
                 url = youtube.search_video(artist_song_name)
                 if not url:
-                    failed_songs.append(artist_song_name)
+                    failed_songs.append(f"{artist_song_name} - Reason: youtube URL not found")
                     continue
 
                 success = youtube.download_audio(url, artist_song_name, artist)
                 if not success:
-                    failed_songs.append(artist_song_name)
+                    failed_songs.append(
+                        f"{artist_song_name} - URL: {url} - Reason: not possible to download this url in any client"
+                    )
                     continue
 
         with open("failed.txt", "w") as f:

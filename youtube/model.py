@@ -52,7 +52,7 @@ class YoutubeModel:
 
                     if os.path.isfile(output + audio_file):
                         print(f'[SpotifyPlaylistToMP3] "{artist_song_name}" already downloaded')
-                        return False
+                        return True
 
                     # Thats the only way file song worked in my car radio
                     print(f'[SpotifyPlaylistToMP3] Trying to reach with "{client}" client')
